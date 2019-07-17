@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { withRouter } from 'react-router-dom';
 class Stops extends Component {
   constructor() {
     super();
@@ -10,8 +10,13 @@ class Stops extends Component {
   }
 
   componentDidMount = async () => {
+    const {
+      match: {
+        params: { region }
+      }
+    } = this.props;
     this.setState({ loading: true });
-    const res = await fetch('/au-syd/stops/all');
+    const res = await fetch(`/${region}/stops/all`);
     const data = await res.json();
     this.setState({ stops: data, loading: false });
   };
@@ -43,4 +48,4 @@ class Stops extends Component {
     );
   }
 }
-export default Stops;
+export default withRouter(Stops);

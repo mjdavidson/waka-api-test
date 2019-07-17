@@ -40,15 +40,19 @@ export interface Trip {
 
 export interface StopMatchParams {
   stopId: string;
+  region: string
 }
 
-export interface StopProps extends RouteComponentProps<StopMatchParams> {}
+export interface StopProps extends RouteComponentProps<StopMatchParams> { }
+export interface HomeProps extends RouteComponentProps<StopMatchParams> { }
+
 
 export interface TripMatchParams {
   tripId: string;
+  region: string
 }
 
-export interface TripProps extends RouteComponentProps<TripMatchParams> {}
+export interface TripProps extends RouteComponentProps<TripMatchParams> { }
 
 export interface StopTime {
   trip_id: string;

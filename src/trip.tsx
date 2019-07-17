@@ -26,20 +26,22 @@ function Trip({ match }: TripProps) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await fetch(`/au-syd/stop-times/${match.params.tripId}`);
+      const res = await fetch(
+        `/${match.params.region}/stop-times/${match.params.tripId}`
+      );
       const data = await res.json();
       setTimes(data);
       setLoading(false);
     };
     fetchData();
-  }, [match.params.tripId]);
+  }, [match.params.region, match.params.tripId]);
 
   useInterval(async () => {
     getRealtime();
   }, 3000);
 
   const getRealtime = async () => {
-    const res = await fetch(`/au-syd/realtime`, {
+    const res = await fetch(`/${match.params.region}/realtime`, {
       method: 'POST',
       body: JSON.stringify({ trips: [match.params.tripId] }),
       headers: {

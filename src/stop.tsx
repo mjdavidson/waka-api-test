@@ -18,22 +18,26 @@ function Stop({ match }: StopProps) {
     const fetchData = async () => {
       setInfoLoading(true);
       setTripsLoading(true);
-      const res1 = await fetch(`/au-syd/station/${match.params.stopId}`);
+      const res1 = await fetch(
+        `/${match.params.region}/station/${match.params.stopId}`
+      );
       const info = await res1.json();
       setInfo(info);
       setInfoLoading(false);
-      const res2 = await fetch(`/au-syd/station/${match.params.stopId}/times`);
+      const res2 = await fetch(
+        `/${match.params.region}/station/${match.params.stopId}/times`
+      );
       const trips = await res2.json();
       setTrips(trips.trips);
       setTripsLoading(false);
     };
     fetchData();
-  }, [match.params.stopId]);
+  }, [match.params.region, match.params.stopId]);
   useInterval(async () => {
     getRealtime();
   }, 15 * 1000);
   const getRealtime = async () => {
-    const res = await fetch(`/au-syd/realtime`, {
+    const res = await fetch(`/${match.params.region}/realtime`, {
       method: 'POST',
       body: JSON.stringify({ trips: trips.map(trip => trip.trip_id) }),
       headers: {
@@ -63,6 +67,7 @@ function Stop({ match }: StopProps) {
   }
   if (!infoLoading && !tripsLoading && info !== null && trips !== null) {
     const blocks: { [blockId: string]: Trip[] } = {};
+    
     for (const trip of trips) {
       if (Object.prototype.hasOwnProperty.call(blocks, trip.block_id)) {
         blocks[trip.block_id].push(trip);
@@ -70,6 +75,7 @@ function Stop({ match }: StopProps) {
         blocks[trip.block_id] = [trip];
       }
     }
+    console.log(blocks);
     const newTrips = trips
       .filter(trip => trip.pickup_type === 0)
       .map(trip => {
@@ -174,7 +180,9 @@ function Stop({ match }: StopProps) {
                   {/* <td>{arrivalTime}</td> */}
                   <td>{trip.departureTime}</td>
                   <td>
-                    <Link to={`/trip/${trip.trip_id}`}>link</Link>
+                    <Link to={`/${match.params.region}/trip/${trip.trip_id}`}>
+                      link
+                    </Link>
                   </td>
                   <td>{trip.status}</td>
                 </TripRow>
